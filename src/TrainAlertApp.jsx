@@ -8,12 +8,11 @@ export default function TrainAlertApp() {
     const fetchArrivals = async () => {
       try {
         const res = await fetch(
-          'https://api.tfl.gov.uk/StopPoint/Rickmansworth/Arrivals'
+          'https://cors-anywhere.herokuapp.com/https://api.tfl.gov.uk/StopPoint/Rickmansworth/Arrivals'
         );
         if (!res.ok) throw new Error('Failed to fetch arrivals');
         const data = await res.json();
 
-        // Sort by expected arrival time
         data.sort((a, b) => new Date(a.expectedArrival) - new Date(b.expectedArrival));
         setArrivals(data);
       } catch (err) {
@@ -23,9 +22,7 @@ export default function TrainAlertApp() {
 
     fetchArrivals();
 
-    // Refresh every 30 seconds
     const interval = setInterval(fetchArrivals, 30000);
-
     return () => clearInterval(interval);
   }, []);
 
@@ -37,7 +34,8 @@ export default function TrainAlertApp() {
         {arrivals.length === 0 && !error && <li>Loading arrivals...</li>}
         {arrivals.map((train) => (
           <li key={train.id}>
-            Train to {train.destinationName} arriving at {new Date(train.expectedArrival).toLocaleTimeString()}
+            Train to {train.destinationName} arriving at{' '}
+            {new Date(train.expectedArrival).toLocaleTimeString()}
           </li>
         ))}
       </ul>
