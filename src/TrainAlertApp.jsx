@@ -34,4 +34,20 @@ export default function TrainAlertApp() {
     <div style={{ padding: 20 }}>
       <h1>Harrow-on-the-Hill Train Arrivals</h1>
 
-      {loading && <p>Loading arrival
+      {loading && <p>Loading arrivals...</p>}
+
+      {error && <p style={{ color: 'red' }}>Error: {error}</p>}
+
+      {!loading && !error && arrivals.length === 0 && <p>No upcoming arrivals found.</p>}
+
+      <ul>
+        {arrivals.map((train) => (
+          <li key={train.id}>
+            Train to {train.destinationName} arriving at{' '}
+            {new Date(train.expectedArrival).toLocaleTimeString()}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
