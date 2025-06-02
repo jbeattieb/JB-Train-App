@@ -25,7 +25,7 @@ export default function TrainAlertApp() {
 
   return (
     <div style={{ padding: '1rem', fontFamily: 'Arial' }}>
-      <h1>Rickmansworth Train Arrivals</h1>
+      <h1>Harrow On The Hil Train Arrivals</h1>
       {error && <p style={{ color: 'red' }}>Error: {error}</p>}
       {arrivals.length === 0 && !error && <p>Loading arrivals...</p>}
       <ul>
