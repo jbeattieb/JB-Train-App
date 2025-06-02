@@ -61,4 +61,33 @@ export default function TrainAlertApp() {
   }, [arrivals, noticeMinutes, notifiedTrains]);
 
   return (
-    <div style={{ padding: 20
+    <div style={{ padding: 20 }}>
+      <h1>Harrow-on-the-Hill Train Arrivals</h1>
+
+      <label>
+        Notify me{' '}
+        <input
+          type="number"
+          min="1"
+          max="30"
+          value={noticeMinutes}
+          onChange={(e) => setNoticeMinutes(Number(e.target.value))}
+          style={{ width: 50, marginLeft: 8, marginRight: 8 }}
+        />
+        minutes before train arrival
+      </label>
+
+      {error && <p style={{ color: 'red' }}>Error: {error}</p>}
+
+      <ul>
+        {arrivals.length === 0 && !error && <li>Loading arrivals...</li>}
+        {arrivals.map((train) => (
+          <li key={train.id}>
+            Train to {train.destinationName} arriving at{' '}
+            {new Date(train.expectedArrival).toLocaleTimeString()}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
