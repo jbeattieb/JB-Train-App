@@ -1,1 +1,9 @@
+{
+  "short_name": "TrainAlert",
+  "name": "Train Alert App",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "description": "Get notified when trains are approaching your location."
+}
 
