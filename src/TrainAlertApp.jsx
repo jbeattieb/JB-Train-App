@@ -4,8 +4,8 @@ export default function TrainAlertApp() {
   const [arrivals, setArrivals] = useState([]);
   const [error, setError] = useState(null);
   const [notifiedTrains, setNotifiedTrains] = useState(new Set());
+  const [noticeMinutes, setNoticeMinutes] = useState(5);
 
-  // Fetch arrivals from your Vercel API
   useEffect(() => {
     const fetchArrivals = async () => {
       try {
@@ -21,18 +21,16 @@ export default function TrainAlertApp() {
 
     fetchArrivals();
 
-    const interval = setInterval(fetchArrivals, 30000); // refresh every 30s
+    const interval = setInterval(fetchArrivals, 30000);
     return () => clearInterval(interval);
   }, []);
 
-  // Request notification permission on load
   useEffect(() => {
     if ('Notification' in window && Notification.permission !== 'granted') {
       Notification.requestPermission();
     }
   }, []);
 
-  // Notify when trains are arriving within 5 minutes
   useEffect(() => {
     if (!arrivals.length) return;
 
@@ -45,7 +43,7 @@ export default function TrainAlertApp() {
 
       if (
         diffMinutes > 0 &&
-        diffMinutes <= 5 &&
+        diffMinutes <= noticeMinutes &&
         !notifiedTrains.has(train.id) &&
         Notification.permission === 'granted'
       ) {
@@ -57,11 +55,25 @@ export default function TrainAlertApp() {
     });
 
     setNotifiedTrains(newNotified);
-  }, [arrivals, notifiedTrains]);
+  }, [arrivals, notifiedTrains, noticeMinutes]);
 
   return (
     <div style={{ padding: 20 }}>
       <h1>Harrow-on-the-Hill Train Arrivals</h1>
+
+      <label>
+        Notify me
+        <input
+          type="number"
+          min="1"
+          max="30"
+          value={noticeMinutes}
+          onChange={(e) => setNoticeMinutes(Number(e.target.value))}
+          style={{ marginLeft: 8, width: 50 }}
+        />
+        minutes before train arrival
+      </label>
+
       {error && <p style={{ color: 'red' }}>Error: {error}</p>}
       <ul>
         {arrivals.length === 0 && !error && <li>Loading arrivals...</li>}
