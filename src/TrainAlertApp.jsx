@@ -1,11 +1,37 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 export default function TrainAlertApp() {
+  const [arrivals, setArrivals] = useState([]);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchArrivals = async () => {
+      setLoading(true);
+      try {
+        const res = await fetch('/api/arrivals');  // Make sure your API is working!
+        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+        const data = await res.json();
+        if (!Array.isArray(data)) throw new Error('Invalid data format');
+        setArrivals(data);
+        setError(null);
+      } catch (err) {
+        setError(err.message);
+        setArrivals([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchArrivals();
+
+    const interval = setInterval(fetchArrivals, 30000); // Refresh every 30 seconds
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div style={{ padding: 20 }}>
       <h1>Harrow-on-the-Hill Train Arrivals</h1>
-      <p>This is a simple test version.</p>
-      <p>If you see this text stay visible, your app setup is fine.</p>
-    </div>
-  );
-}
+
+      {loading && <p>Loading arrival
