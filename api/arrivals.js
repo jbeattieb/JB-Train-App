@@ -1,5 +1,3 @@
-import fetch from 'node-fetch';
-
 export default async function handler(req, res) {
   try {
     const tflUrl = 'https://api.tfl.gov.uk/StopPoint/Rickmansworth/Arrivals';
@@ -12,7 +10,6 @@ export default async function handler(req, res) {
 
     const data = await response.json();
 
-    // Sort by expectedArrival
     data.sort((a, b) => new Date(a.expectedArrival) - new Date(b.expectedArrival));
 
     res.status(200).json(data);
