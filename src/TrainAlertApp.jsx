@@ -6,7 +6,7 @@ export default function TrainAlertApp() {
   const [noticeMinutes, setNoticeMinutes] = useState(5);
   const [notifiedTrains, setNotifiedTrains] = useState(new Set());
 
-  // Fetch train arrivals every 30 seconds
+  // Fetch arrivals every 30 seconds
   useEffect(() => {
     const fetchArrivals = async () => {
       try {
@@ -27,14 +27,14 @@ export default function TrainAlertApp() {
     return () => clearInterval(interval);
   }, []);
 
-  // Request notification permission on load
+  // Request notification permission
   useEffect(() => {
     if ('Notification' in window && Notification.permission !== 'granted') {
       Notification.requestPermission();
     }
   }, []);
 
-  // Show notifications for trains arriving within noticeMinutes
+  // Notifications for trains arriving soon
   useEffect(() => {
     if (Notification.permission !== 'granted') return;
 
@@ -61,7 +61,15 @@ export default function TrainAlertApp() {
   }, [arrivals, noticeMinutes, notifiedTrains]);
 
   return (
-    <div style={{ padding: 20 }}>
+    <div
+      style={{
+        padding: 20,
+        minHeight: 200,
+        WebkitTextSizeAdjust: '100%',
+        WebkitUserSelect: 'none',
+        userSelect: 'none',
+      }}
+    >
       <h1>Harrow-on-the-Hill Train Arrivals</h1>
 
       <label>
@@ -79,15 +87,18 @@ export default function TrainAlertApp() {
 
       {error && <p style={{ color: 'red' }}>Error: {error}</p>}
 
-      <ul>
-        {arrivals.length === 0 && !error && <li>Loading arrivals...</li>}
-        {arrivals.map((train) => (
-          <li key={train.id}>
-            Train to {train.destinationName} arriving at{' '}
-            {new Date(train.expectedArrival).toLocaleTimeString()}
-          </li>
-        ))}
-      </ul>
+      {arrivals.length === 0 && !error ? (
+        <p>Loading arrivals…</p>
+      ) : (
+        <ul>
+          {arrivals.map((train) => (
+            <li key={train.id}>
+              Train to {train.destinationName} arriving at{' '}
+              {new Date(train.expectedArrival).toLocaleTimeString()}
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
