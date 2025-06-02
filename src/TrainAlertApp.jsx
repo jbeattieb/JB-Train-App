@@ -63,11 +63,23 @@ export default function TrainAlertApp() {
   return (
     <div
       style={{
+        position: 'fixed',    // Fix position to avoid iOS repaint issues
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        overflow: 'auto',    // allow scrolling if needed
         padding: 20,
         minHeight: 200,
         WebkitTextSizeAdjust: '100%',
         WebkitUserSelect: 'none',
         userSelect: 'none',
+        WebkitTransform: 'translate3d(0,0,0)',   // GPU acceleration
+        WebkitBackfaceVisibility: 'hidden',
+        WebkitPerspective: 1000,
+        willChange: 'transform',
+        backgroundColor: 'white',
+        color: 'black',
       }}
     >
       <h1>Harrow-on-the-Hill Train Arrivals</h1>
@@ -88,7 +100,9 @@ export default function TrainAlertApp() {
       {error && <p style={{ color: 'red' }}>Error: {error}</p>}
 
       {arrivals.length === 0 && !error ? (
-        <p>Loading arrivals…</p>
+        <p style={{ color: 'black', fontWeight: 'bold' }}>
+          Loading arrivals…
+        </p>
       ) : (
         <ul>
           {arrivals.map((train) => (
