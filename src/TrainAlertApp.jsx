@@ -7,13 +7,10 @@ export default function TrainAlertApp() {
   useEffect(() => {
     const fetchArrivals = async () => {
       try {
-        const res = await fetch(
-          'https://cors-anywhere.herokuapp.com/https://api.tfl.gov.uk/StopPoint/Rickmansworth/Arrivals'
-        );
+        // Call your Vercel backend API instead of TfL directly
+        const res = await fetch('/api/arrivals');
         if (!res.ok) throw new Error('Failed to fetch arrivals');
         const data = await res.json();
-
-        data.sort((a, b) => new Date(a.expectedArrival) - new Date(b.expectedArrival));
         setArrivals(data);
       } catch (err) {
         setError(err.message);
