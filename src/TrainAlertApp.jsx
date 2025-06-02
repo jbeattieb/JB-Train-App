@@ -7,8 +7,7 @@ export default function TrainAlertApp() {
   useEffect(() => {
     const fetchArrivals = async () => {
       try {
-        // Call your Vercel backend API instead of TfL directly
-        const res = await fetch('/api/arrivals');
+        const res = await fetch('/api/arrivals'); // Calls your serverless API
         if (!res.ok) throw new Error('Failed to fetch arrivals');
         const data = await res.json();
         setArrivals(data);
@@ -19,7 +18,7 @@ export default function TrainAlertApp() {
 
     fetchArrivals();
 
-    const interval = setInterval(fetchArrivals, 30000);
+    const interval = setInterval(fetchArrivals, 30000); // Refresh every 30 sec
     return () => clearInterval(interval);
   }, []);
 
